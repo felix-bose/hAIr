@@ -1,47 +1,45 @@
-"use client";
+"use client"
 
-import { useState } from "react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { ImagePlus, Loader2 } from "lucide-react";
-import Image from "next/image";
-import LoadingAnimation from "./LoadingAnimation";
+import { useState } from "react"
+import { Textarea, Button, Input } from "@/components/ui"
+import { ImagePlus, Loader2 } from "lucide-react"
+import Image from "next/image"
+import LoadingAnimation from "./LoadingAnimation"
 
 export default function ImageUploader() {
-  const [images, setImages] = useState<File[]>([]);
-  const [prompt, setPrompt] = useState("");
-  const [loading, setLoading] = useState(false);
-  const [result, setResult] = useState("");
+  const [images, setImages] = useState<File[]>([])
+  const [prompt, setPrompt] = useState("")
+  const [loading, setLoading] = useState(false)
+  const [result, setResult] = useState("")
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
-      setImages(Array.from(e.target.files));
+      setImages(Array.from(e.target.files))
     }
-  };
+  }
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setLoading(true);
+    e.preventDefault()
+    setLoading(true)
 
     try {
-      const formData = new FormData();
-      formData.append("prompt", prompt);
-      images.forEach((image) => formData.append("images", image));
+      const formData = new FormData()
+      formData.append("prompt", prompt)
+      images.forEach((image) => formData.append("images", image))
 
       const response = await fetch("/api/process-images", {
         method: "POST",
         body: formData,
-      });
+      })
 
-      const data = await response.json();
-      setResult(data.result);
+      const data = await response.json()
+      setResult(data.result)
     } catch (error) {
-      console.error("Error processing images:", error);
+      console.error("Error processing images:", error)
     } finally {
-      setLoading(false);
+      setLoading(false)
     }
-  };
+  }
 
   return (
     <div className="space-y-8">
@@ -72,9 +70,7 @@ export default function ImageUploader() {
               />
               <div className="text-center">
                 <ImagePlus className="mx-auto h-12 w-12 text-gray-400" />
-                <span className="mt-2 block text-sm text-gray-400">
-                  Add Images
-                </span>
+                <span className="mt-2 block text-sm text-gray-400">Add Images</span>
               </div>
             </label>
           </div>
@@ -112,5 +108,5 @@ export default function ImageUploader() {
         </div>
       )}
     </div>
-  );
+  )
 }

@@ -1,24 +1,19 @@
-import type { NextAuthConfig } from "next-auth";
-import GoogleProvider from "next-auth/providers/google";
+import type { NextAuthConfig } from "next-auth"
+import GoogleProvider from "next-auth/providers/google"
 
 export const authConfig = {
-  providers: [
-    GoogleProvider({
-      clientId: process.env.GOOGLE_CLIENT_ID!,
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
-    }),
-  ],
+  providers: [GoogleProvider],
   pages: {
     signIn: "/",
   },
   callbacks: {
     authorized({ auth, request: { nextUrl } }) {
-      const isLoggedIn = !!auth?.user;
-      const isOnApi = nextUrl.pathname.startsWith('/api');
+      const isLoggedIn = !!auth?.user
+      const isOnApi = nextUrl.pathname.startsWith("/api")
       if (isOnApi) {
-        return isLoggedIn;
+        return isLoggedIn
       }
-      return true;
+      return true
     },
   },
-} satisfies NextAuthConfig;
+} satisfies NextAuthConfig
