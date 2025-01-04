@@ -1,8 +1,10 @@
-export { default } from "next-auth/middleware";
+import NextAuth from "next-auth";
+import { authConfig } from "./auth.config";
+
+export const { auth: middleware } = NextAuth(authConfig);
+
+export default middleware;
 
 export const config = {
-  matcher: [
-    "/api/process-images",
-    "/api/auth/:path*"
-  ]
+  matcher: ["/api/process-images"]
 };

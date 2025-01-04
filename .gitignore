@@ -1,0 +1,43 @@
+# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+
+#nextjs specific
+.next
+out
+.vercel
+.swc
+/.next
+
+# dependencies
+/node_modules
+
+# testing
+/coverage
+
+# production
+/build
+
+# misc
+.DS_Store
+.eslintcache
+
+npm-debug.log*
+
+**/node_modules/*
+
+### react ###
+.DS_*
+*.log
+logs
+**/*.backup.*
+**/*.back.*
+
+node_modules
+bower_components
+package-lock.json
+tsconfig.tsbuildinfo
+tsconfig.build.tsbuildinfo
+
+.env
+!.env.example
+!.env.staging
+!.env.prod

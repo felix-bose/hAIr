@@ -1,12 +1,9 @@
-import { headers } from "next/headers";
-import { getServerSession } from "next-auth";
-import { authOptions } from "@/lib/auth";
+import { auth } from "@/auth";
 import LoginButton from "@/components/LoginButton";
 import ImageUploader from "@/components/ImageUploader";
 
 export default async function Home() {
-  headers(); // This ensures headers are available for server-side auth
-  const session = await getServerSession(authOptions);
+  const session = await auth();
 
   return (
     <main className="min-h-screen bg-gradient-to-b from-gray-900 to-gray-800 text-white">
