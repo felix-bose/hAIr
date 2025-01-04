@@ -37,12 +37,11 @@ export async function POST(request: Request) {
       prompt: prompt.length === 0 ? systemPrompt : prompt,
       response_format: "url",
       size: getOpenAIImageDimensions("medium"),
+      n: 1,
       image,
     })
 
     const [createdImage] = response.data
-
-    console.log("Created image:", createdImage)
 
     return NextResponse.json({ image: createdImage })
   } catch (error) {
