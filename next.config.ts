@@ -5,7 +5,11 @@ const nextConfig: NextConfig = {
     turbo: {},
   },
   images: {
-    domains: ["images.unsplash.com"],
+    // unsplash for demos, open ai image server storage
+    remotePatterns: [
+      { hostname: "images.unsplash.com" },
+      { hostname: "oaidalleapiprodscus.blob.core.windows.net" },
+    ],
   },
 }
 

@@ -15,7 +15,7 @@ export default async function Home() {
       <div className="container mx-auto px-4 py-8">
         <div className="max-w-4xl mx-auto">
           <div className="flex justify-between items-center mb-8">
-            <h1 className="text-4xl font-bold text-left mb-8">AI Image Processing</h1>
+            <h1 className="text-4xl font-bold text-left mb-8">h-AI-radvisor</h1>
             {user ? (
               <Popover>
                 <PopoverTrigger asChild>

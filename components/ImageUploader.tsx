@@ -5,16 +5,17 @@ import { Textarea, Button, Input } from "@/components/ui"
 import { ImagePlus, Loader2 } from "lucide-react"
 import Image from "next/image"
 import LoadingAnimation from "./LoadingAnimation"
+import type { Image as TImage } from "openai/resources/images.mjs"
 
 export default function ImageUploader() {
-  const [images, setImages] = useState<File[]>([])
+  const [image, setImage] = useState<File>()
+  const [outputImage, setOutputImage] = useState<TImage>()
   const [prompt, setPrompt] = useState("")
   const [loading, setLoading] = useState(false)
-  const [result, setResult] = useState("")
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
-      setImages(Array.from(e.target.files))
+      setImage(e.target.files[0])
     }
   }
 
@@ -25,15 +26,17 @@ export default function ImageUploader() {
     try {
       const formData = new FormData()
       formData.append("prompt", prompt)
-      images.forEach((image) => formData.append("images", image))
+      formData.append("image", image ?? new Blob())
 
       const response = await fetch("/api/process-images", {
         method: "POST",
         body: formData,
       })
 
-      const data = await response.json()
-      setResult(data.result)
+      const data = (await response.json()) as { image: TImage }
+      console.log("Output image:", data.image)
+
+      setOutputImage(data.image)
     } catch (error) {
       console.error("Error processing images:", error)
     } finally {
@@ -47,32 +50,30 @@ export default function ImageUploader() {
         <div className="space-y-2">
           <label className="block text-sm font-medium">Images</label>
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-            {images.map((image, index) => (
-              <div
-                key={index}
-                className="relative aspect-square rounded-lg overflow-hidden bg-gray-800"
-              >
+            {image ? (
+              <div className="relative aspect-square rounded-lg overflow-hidden bg-gray-800">
                 <Image
                   src={URL.createObjectURL(image)}
-                  alt={`Upload ${index + 1}`}
+                  alt={`Uploaded image: ${image.name}`}
                   fill
                   className="object-cover"
                 />
               </div>
-            ))}
-            <label className="relative aspect-square rounded-lg border-2 border-dashed border-gray-600 hover:border-gray-500 cursor-pointer flex items-center justify-center bg-gray-800">
-              <Input
-                type="file"
-                multiple
-                accept="image/*"
-                onChange={handleImageChange}
-                className="hidden"
-              />
-              <div className="text-center">
-                <ImagePlus className="mx-auto h-12 w-12 text-gray-400" />
-                <span className="mt-2 block text-sm text-gray-400">Add Images</span>
-              </div>
-            </label>
+            ) : (
+              <label className="relative aspect-square rounded-lg border-2 border-dashed border-gray-600 hover:border-gray-500 cursor-pointer flex items-center justify-center bg-gray-800">
+                <Input
+                  type="file"
+                  multiple={false}
+                  accept="image/*"
+                  onChange={handleImageChange}
+                  className="hidden"
+                />
+                <div className="text-center">
+                  <ImagePlus className="mx-auto h-12 w-12 text-gray-400" />
+                  <span className="mt-2 block text-sm text-gray-400">Add Image</span>
+                </div>
+              </label>
+            )}
           </div>
         </div>
 
@@ -88,7 +89,7 @@ export default function ImageUploader() {
 
         <Button
           type="submit"
-          disabled={loading || images.length === 0 || !prompt}
+          disabled={loading || !image || !prompt}
           className="w-full"
         >
           {loading ? (
@@ -101,10 +102,16 @@ export default function ImageUploader() {
 
       {loading && <LoadingAnimation />}
 
-      {result && !loading && (
+      {!loading && outputImage?.url && (
         <div className="bg-gray-800 rounded-lg p-6">
           <h2 className="text-xl font-semibold mb-4">Result</h2>
-          <p className="text-gray-300 whitespace-pre-wrap">{result}</p>
+          <Image
+            src={outputImage.url}
+            alt="Output image"
+            width={512}
+            height={512}
+            className="rounded-lg"
+          />
         </div>
       )}
     </div>
