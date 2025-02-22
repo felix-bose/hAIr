@@ -33,8 +33,8 @@ export async function POST(request: Request) {
 
     const image = await toFile(formImage, formImage.name)
 
-    const response = await openAI.images.edit({
-      prompt: prompt.length === 0 ? systemPrompt : prompt,
+    const response = await openAI.images.createVariation({
+      // prompt: prompt.length === 0 ? systemPrompt : prompt,
       response_format: "url",
       size: getOpenAIImageDimensions("medium"),
       n: 1,
