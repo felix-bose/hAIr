@@ -1,4 +1,4 @@
-# hair ai
+# hAIr
 
 Small little demo application to upload an image and make transformations to the hair with AI by providing a system prompt.
 Similar to what [LightX](https://www.lightxeditor.com/api/ai-hairstyle/) and [Remini](https://remini.ai/) do.
